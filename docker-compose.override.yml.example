@@ -1,0 +1,48 @@
+# Copy this file to docker-compose.override.yml for local development
+# docker-compose.override.yml is ignored by git for local customization
+
+services:
+  laravel:
+    environment:
+      # Laravel Configuration
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - APP_KEY=base64:your-generated-key-here
+      - APP_URL=http://localhost
+      - LOG_CHANNEL=stderr
+      - LOG_LEVEL=debug
+      
+      # Database Configuration
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=laravel
+      - DB_USERNAME=laravel
+      - DB_PASSWORD=laravel
+      
+      # Cache Configuration
+      - CACHE_DRIVER=file
+      - SESSION_DRIVER=file
+      - QUEUE_CONNECTION=sync
+      
+      # Mail Configuration (for local testing)
+      - MAIL_MAILER=log
+      - MAIL_FROM_ADDRESS=hello@example.com
+      - MAIL_FROM_NAME="Laravel App"
+      
+      # SMTP Configuration (uncomment to test SMTP)
+      # - QUANT_SMTP_RELAY_ENABLED=false
+      # - QUANT_SMTP_HOST=mailhog
+      # - QUANT_SMTP_PORT=1025
+      # - QUANT_SMTP_FROM=test@example.com
+      # - QUANT_SMTP_FROM_NAME="Laravel Test"
+
+  db:
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=laravel
+      - MYSQL_USER=laravel
+      - MYSQL_PASSWORD=laravel
+    ports:
+      # Expose MySQL port for local database clients
+      - "3306:3306"

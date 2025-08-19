@@ -1,0 +1,243 @@
+# Laravel Application Template
+
+A production-ready Laravel application template for Quant, featuring PHP 8.3, Apache with mod_php, MySQL, and Docker containerization.
+
+## Features
+
+- **Laravel 11** - Latest version of the Laravel framework
+- **PHP 8.3** with common extensions (GD, PDO, BCMath, etc.)
+- **Apache + mod_php** - Simple single-container setup
+- **MySQL 8.4** database
+- **Composer** for dependency management
+- **Docker & Docker Compose** for containerization
+- **Persistent storage** for Laravel's storage directory
+- **Quant integration** ready out of the box:
+  - Client IP handling via `Quant-Client-IP` header
+  - Host header override for `Quant-Orig-Host`
+  - SMTP relay support for email delivery
+  - UID/GID 1000 mapping for EFS compatibility
+- **Logging to stdout/stderr** for Docker best practices
+
+## Quick Start
+
+### Prerequisites
+
+- Docker and Docker Compose
+- Git
+
+### Local Development
+
+1. Clone this template:
+   ```bash
+   git clone <your-repo-url> my-laravel-app
+   cd my-laravel-app
+   ```
+
+2. **Laravel Application Source**
+   
+   The template includes a complete Laravel 11 installation in the `src/` directory for immediate use. This is generated code from `composer create-project laravel/laravel` but included for convenience.
+   
+   **To regenerate with latest Laravel version:**
+   ```bash
+   ./setup.sh
+   ```
+
+3. Copy and configure environment variables:
+   ```bash
+   cp docker-compose.override.yml.example docker-compose.override.yml
+   ```
+   
+   Edit `docker-compose.override.yml` to set your local environment variables, especially:
+   - `APP_KEY` - Generate with `docker-compose exec laravel php artisan key:generate`
+   - Database credentials
+
+4. Start the application:
+   ```bash
+   docker-compose up -d
+   ```
+
+5. Generate application key:
+   ```bash
+   docker-compose exec laravel php artisan key:generate
+   ```
+
+6. Run migrations:
+   ```bash
+   docker-compose exec laravel php artisan migrate
+   ```
+
+7. Access your application at `http://localhost`
+
+## Configuration
+
+### Environment Variables
+
+Key environment variables you should configure:
+
+#### Laravel Configuration
+- `APP_KEY` - Application encryption key (required)
+- `APP_ENV` - Application environment (default: production)
+- `APP_DEBUG` - Enable debug mode (default: false)
+- `APP_URL` - Application URL
+
+#### Database Configuration
+- `DB_HOST` - Database host (default: db)
+- `DB_DATABASE` - Database name (default: laravel)
+- `DB_USERNAME` - Database username (default: laravel)
+- `DB_PASSWORD` - Database password (default: laravel)
+
+#### Logging Configuration
+- `LOG_CHANNEL` - Logging channel (default: stderr for Docker)
+- `LOG_LEVEL` - Log level (default: error)
+
+#### SMTP Configuration
+- `QUANT_SMTP_RELAY_ENABLED` - Enable Postfix SMTP relay (default: false)
+- `QUANT_SMTP_HOST` - SMTP server hostname
+- `QUANT_SMTP_PORT` - SMTP server port (default: 587)
+- `QUANT_SMTP_USERNAME` - SMTP authentication username
+- `QUANT_SMTP_PASSWORD` - SMTP authentication password
+- `QUANT_SMTP_FROM` - From email address
+- `QUANT_SMTP_FROM_NAME` - From display name
+
+#### Quant Integration
+- `QUANT_ENABLED` - Enable Quant integration
+- `QUANT_API_ENDPOINT` - Quant API endpoint
+- `QUANT_CUSTOMER` - Your Quant customer ID
+- `QUANT_PROJECT` - Your Quant project ID
+- `QUANT_TOKEN` - Your Quant API token
+
+### File Storage
+
+The application uses a persistent Docker volume for the Laravel `storage` directory to ensure file uploads, cache files, and logs persist across container restarts.
+
+## Development
+
+### Artisan Commands
+
+Run Laravel Artisan commands using Docker Compose:
+
+```bash
+# Generate application key
+docker-compose exec laravel php artisan key:generate
+
+# Run migrations
+docker-compose exec laravel php artisan migrate
+
+# Clear cache
+docker-compose exec laravel php artisan cache:clear
+
+# Create a controller
+docker-compose exec laravel php artisan make:controller UserController
+
+# Enter tinker REPL
+docker-compose exec laravel php artisan tinker
+```
+
+### Composer
+
+Install new packages:
+
+```bash
+docker-compose exec laravel composer require package-name
+```
+
+### Database Access
+
+Access the MySQL database directly:
+
+```bash
+docker-compose exec db mysql -u laravel -p laravel
+```
+
+### Logs
+
+View application logs:
+
+```bash
+docker-compose logs -f laravel
+```
+
+View database logs:
+
+```bash
+docker-compose logs -f db
+```
+
+## Deployment
+
+This template is designed to work seamlessly with Quant's deployment platform. The Docker container includes all necessary configurations for production deployment.
+
+### Key Production Features
+
+1. **Optimized Dockerfile**: Multi-stage build with proper layer caching
+2. **Security**: Runs as www-data user, secure permissions
+3. **Performance**: OPcache enabled, Composer autoloader optimization
+4. **Logging**: Configured for container-based logging
+5. **Health Checks**: Built-in health check endpoints
+
+## Directory Structure
+
+```
+app-laravel/
+├── src/                    # Laravel application files (generated by composer)
+│   ├── app/               # Application logic
+│   ├── config/            # Configuration files
+│   ├── database/          # Migrations and seeders
+│   ├── public/            # Web root (DocumentRoot)
+│   ├── routes/            # Route definitions
+│   └── storage/           # File storage (persistent volume)
+├── quant/                 # Quant integration files
+│   ├── entrypoints/       # Startup scripts
+│   ├── php.ini.d/         # PHP configuration
+│   ├── entrypoints.sh     # Main entrypoint script
+│   └── meta.json          # Template metadata
+├── setup.sh               # Script to regenerate Laravel app
+├── Dockerfile             # Container definition
+├── docker-compose.yml     # Service orchestration
+└── README.md              # This file
+```
+
+## Troubleshooting
+
+### Application Key Missing
+
+If you see "No application encryption key has been specified":
+
+```bash
+docker-compose exec laravel php artisan key:generate
+```
+
+### Database Connection Issues
+
+1. Ensure the database container is running:
+   ```bash
+   docker-compose ps
+   ```
+
+2. Check database logs:
+   ```bash
+   docker-compose logs db
+   ```
+
+3. Verify database credentials in your environment configuration.
+
+### Permission Issues
+
+If you encounter file permission issues:
+
+```bash
+docker-compose exec laravel chown -R www-data:www-data /var/www/html/storage
+docker-compose exec laravel chmod -R 775 /var/www/html/storage
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test with Docker Compose
+5. Submit a pull request
+
+## License
+
+This Laravel application template is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
