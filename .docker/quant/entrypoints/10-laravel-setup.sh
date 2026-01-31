@@ -17,7 +17,6 @@ chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 # Ensure the public/storage symlink exists (for file uploads)
 if [ ! -L /var/www/html/public/storage ]; then
     echo "[$(date +'%Y-%m-%d %H:%M:%S')] Creating storage symlink..." >&2
-    # Create symlink as root, then fix ownership
     ln -sf /var/www/html/storage/app/public /var/www/html/public/storage 2>/dev/null || true
     chown -h www-data:www-data /var/www/html/public/storage 2>/dev/null || true
 fi
