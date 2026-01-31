@@ -1,6 +1,6 @@
 # Laravel Application Template
 
-[![Deploy to Quant Cloud](https://www.quantcdn.io/img/quant-deploy-btn-sml.svg)](https://dashboard.quantcdn.io/cloud-apps/create/starter-kit/app-laravel)
+[![Deploy to Quant Cloud](https://www.quantcdn.io/img/quant-deploy-btn-sml.svg)](https://dashboard.quantcdn.io/deploy/app/app-laravel)
 
 A production-ready Laravel application template for Quant Cloud, featuring PHP 8.4, Apache with mod_php, MySQL, and Docker containerization.
 
