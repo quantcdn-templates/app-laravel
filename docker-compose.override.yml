@@ -14,6 +14,8 @@ services:
     # This allows testing the same initialization that runs in Quant Cloud
     entrypoint: ["docker-entrypoint-laravel.sh"]
     command: ["apache2-foreground"]
+    ports:
+      - "80:80"
 
     volumes:
       # Mount source code for live development
@@ -37,6 +39,7 @@ services:
       - DB_DATABASE=laravel
       - DB_USERNAME=laravel
       - DB_PASSWORD=laravel
+      - DISABLE_DB_TLS=true
 
       # Cache Configuration
       - CACHE_DRIVER=file

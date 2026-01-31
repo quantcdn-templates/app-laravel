@@ -58,8 +58,13 @@ return [
             'strict' => true,
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA', '/opt/rds-ca-certs/rds-ca-cert-bundle.pem'),
-                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => env('MYSQL_ATTR_SSL_VERIFY_SERVER_CERT', true),
+                // SSL settings for Quant Cloud RDS - set DISABLE_DB_TLS=true for local development
+                PDO::MYSQL_ATTR_SSL_CA => env('DISABLE_DB_TLS', false)
+                    ? null
+                    : env('MYSQL_ATTR_SSL_CA', '/opt/rds-ca-certs/rds-ca-cert-bundle.pem'),
+                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => env('DISABLE_DB_TLS', false)
+                    ? null
+                    : env('MYSQL_ATTR_SSL_VERIFY_SERVER_CERT', true),
             ]) : [],
         ],
 
@@ -79,8 +84,13 @@ return [
             'strict' => true,
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA', '/opt/rds-ca-certs/rds-ca-cert-bundle.pem'),
-                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => env('MYSQL_ATTR_SSL_VERIFY_SERVER_CERT', true),
+                // SSL settings for Quant Cloud RDS - set DISABLE_DB_TLS=true for local development
+                PDO::MYSQL_ATTR_SSL_CA => env('DISABLE_DB_TLS', false)
+                    ? null
+                    : env('MYSQL_ATTR_SSL_CA', '/opt/rds-ca-certs/rds-ca-cert-bundle.pem'),
+                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => env('DISABLE_DB_TLS', false)
+                    ? null
+                    : env('MYSQL_ATTR_SSL_VERIFY_SERVER_CERT', true),
             ]) : [],
         ],
 
