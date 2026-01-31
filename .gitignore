@@ -1,3 +1,7 @@
+# Lock files (generated during build)
+composer.lock
+src/composer.lock
+
 # OS generated files
 .DS_Store
 .DS_Store?
