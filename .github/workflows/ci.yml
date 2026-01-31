@@ -72,26 +72,17 @@ jobs:
       - name: Detect Laravel version
         id: version
         run: |
-          # Try to get Laravel version from the built container
+          # Get actual installed Laravel version from composer.lock
           VERSION=$(docker run --rm temp-version-check:latest php -r "
-            \$composer = json_decode(file_get_contents('/var/www/html/composer.json'), true);
-            if (isset(\$composer['require']['laravel/framework'])) {
-              echo preg_replace('/[^0-9.]/', '', \$composer['require']['laravel/framework']);
-            } else {
-              echo '0.0.0';
+            \$lock = json_decode(file_get_contents('/var/www/html/composer.lock'), true);
+            foreach (\$lock['packages'] ?? [] as \$pkg) {
+              if (\$pkg['name'] === 'laravel/framework') {
+                echo preg_replace('/[^0-9.]/', '', \$pkg['version']);
+                exit;
+              }
             }
+            echo '0.0.0';
           " 2>/dev/null) || VERSION="0.0.0"
-
-          # Clean up version string (handle both x.y.z and x.y formats)
-          RAW_VERSION="$VERSION"
-          VERSION=$(echo "$RAW_VERSION" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
-          if [ -z "$VERSION" ]; then
-            # Try 2-part version and append .0
-            VERSION=$(echo "$RAW_VERSION" | grep -oE '[0-9]+\.[0-9]+' | head -1)
-            if [ -n "$VERSION" ]; then
-              VERSION="${VERSION}.0"
-            fi
-          fi
 
           if [ -z "$VERSION" ] || [ "$VERSION" = "0.0.0" ]; then
             echo "Could not detect version, using timestamp-based version"
