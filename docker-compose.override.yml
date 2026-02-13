@@ -27,7 +27,7 @@ services:
       # Laravel Configuration
       - APP_ENV=local
       - APP_DEBUG=true
-      - APP_KEY=base64:your-generated-key-here
+      - APP_KEY=base64:5jF8+AWwTh5IhY39pPpfmV3JOqScvNQQniqCYiHfHvY=
       - APP_URL=http://localhost
       - LOG_CHANNEL=stderr
       - LOG_LEVEL=debug
