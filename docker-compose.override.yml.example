@@ -1,0 +1,16 @@
+# Copy to docker-compose.override.yml for local development
+#
+#   cp docker-compose.override.yml.example docker-compose.override.yml
+#   docker compose up
+#
+services:
+  app:
+    environment:
+      # Local-dev database connection (on Quant Cloud these are injected by the
+      # platform from the managed RDS instance; they must NEVER move into the base
+      # docker-compose.yml — compose env overrides platform injection)
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=laravel
+      - DB_USERNAME=laravel
+      - DB_PASSWORD=laravel
