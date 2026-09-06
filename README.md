@@ -103,6 +103,20 @@ Key environment variables you should configure:
 
 The application uses a persistent Docker volume for the Laravel `storage` directory to ensure file uploads, cache files, and logs persist across container restarts.
 
+### Quant Cloud managed cache
+
+Attach an organisation cache to the environment under **Cloud → Resources** and redeploy. The platform injects `REDIS_HOST`, `REDIS_SERVICE_PORT`, `REDIS_TLS`, `REDIS_USER`, `REDIS_PASSWORD` and `CACHE_PREFIX`, and `config/database.php` maps them onto Laravel's Redis connections: TLS is enabled, the cache store uses database 0, and every key is prefixed with `{CACHE_PREFIX}:` so it stays inside this environment's own key space.
+
+To use the cache, set the drivers that should live in Redis:
+
+```
+CACHE_STORE=redis
+SESSION_DRIVER=redis
+QUEUE_CONNECTION=redis
+```
+
+The environment's cache user cannot run `FLUSHDB`, so `php artisan cache:clear` fails with `NOPERM` on a shared cache. Clear with tags or `Cache::forget()`, use **Purge keys** on the attachment in the dashboard, or attach the environment with the **Admin (entire cache)** access level if a full flush is genuinely required.
+
 ## Development
 
 ### Artisan Commands

@@ -157,27 +157,42 @@ return [
 
         'client' => env('REDIS_CLIENT', 'phpredis'),
 
+        // Quant Cloud managed cache. When a cache is attached to the
+        // environment the platform injects REDIS_HOST, REDIS_SERVICE_PORT,
+        // REDIS_TLS=1, REDIS_USER, REDIS_PASSWORD and CACHE_PREFIX. The cache
+        // is TLS-only, cluster-mode (one logical database), and each
+        // environment's user may only touch keys under its CACHE_PREFIX. The
+        // prefix is written as a hash tag, `{prefix}:`, so every key this app
+        // writes (cache, session, queue) lands in one cluster slot and stays
+        // inside the environment's own key space. Plain REDIS_* settings keep
+        // working for a self-managed Redis.
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', env('CACHE_PREFIX')
+                ? '{'.env('CACHE_PREFIX').'}:'
+                : Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
         ],
 
         'default' => [
             'url' => env('REDIS_URL'),
+            'scheme' => env('REDIS_SCHEME', env('REDIS_TLS') === '1' ? 'tls' : 'tcp'),
             'host' => env('REDIS_HOST', '127.0.0.1'),
-            'username' => env('REDIS_USERNAME'),
+            'username' => env('REDIS_USERNAME', env('REDIS_USER')),
             'password' => env('REDIS_PASSWORD'),
-            'port' => env('REDIS_PORT', '6379'),
+            'port' => env('REDIS_PORT', env('REDIS_SERVICE_PORT', '6379')),
             'database' => env('REDIS_DB', '0'),
         ],
 
         'cache' => [
             'url' => env('REDIS_URL'),
+            'scheme' => env('REDIS_SCHEME', env('REDIS_TLS') === '1' ? 'tls' : 'tcp'),
             'host' => env('REDIS_HOST', '127.0.0.1'),
-            'username' => env('REDIS_USERNAME'),
+            'username' => env('REDIS_USERNAME', env('REDIS_USER')),
             'password' => env('REDIS_PASSWORD'),
-            'port' => env('REDIS_PORT', '6379'),
-            'database' => env('REDIS_CACHE_DB', '1'),
+            'port' => env('REDIS_PORT', env('REDIS_SERVICE_PORT', '6379')),
+            // A managed cache has a single logical database; keep the cache
+            // store on 0 there, and on its own database for a self-managed Redis.
+            'database' => env('REDIS_CACHE_DB', env('CACHE_PREFIX') ? '0' : '1'),
         ],
 
     ],
