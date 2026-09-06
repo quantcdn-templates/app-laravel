@@ -103,6 +103,9 @@ return [
     |
     */
 
-    'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_'),
+    // CACHE_PREFIX is owned by Quant Cloud (the per-environment key space,
+    // applied as a hash tag at the Redis connection level in
+    // config/database.php), so the store prefix reads its own variable.
+    'prefix' => env('CACHE_STORE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_'),
 
 ];
