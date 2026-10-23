@@ -11,7 +11,7 @@ services:
       - APP_KEY=base64:5jF8+AWwTh5IhY39pPpfmV3JOqScvNQQniqCYiHfHvY=
 
       # Local-dev database connection (on Quant Cloud these are injected by the
-      # platform from the managed RDS instance; they must NEVER move into the base
+      # platform from the managed database instance; they must NEVER move into the base
       # docker-compose.yml — compose env overrides platform injection)
       - DB_HOST=db
       - DB_PORT=3306

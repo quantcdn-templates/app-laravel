@@ -26,7 +26,7 @@ services:
       # Database Configuration
       - DB_CONNECTION=${DB_CONNECTION:-mysql}
       # NOTE: DB_HOST/DB_PORT/DB_DATABASE/DB_USERNAME/DB_PASSWORD must NOT be set here.
-      # Compose-declared env OVERRIDES Quant Cloud's injected RDS values and breaks
+      # Compose-declared env OVERRIDES Quant Cloud's injected managed database values and breaks
       # deployed apps. Local-dev values live in docker-compose.override.yml.example.
       
       # Cache Configuration  
