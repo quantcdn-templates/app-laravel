@@ -6,5 +6,14 @@
     "image": "https://raw.githubusercontent.com/quantcdn-templates/app-laravel/main/quant/screenshot.png",
     "categories": ["framework", "php", "laravel"],
     "tags": ["web-framework", "mvc", "php", "composer", "artisan"],
-    "template_type": "app"
+    "template_type": "app",
+    "requires_db": true,
+    "secrets": [
+        {
+            "name": "APP_KEY",
+            "description": "Laravel encryption key (32 characters, generated per site)",
+            "generate": "random",
+            "length": 32
+        }
+    ]
 }]

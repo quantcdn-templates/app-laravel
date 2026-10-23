@@ -3,6 +3,12 @@
 # Laravel-specific setup tasks
 echo "[$(date +'%Y-%m-%d %H:%M:%S')] Running Laravel setup..." >&2
 
+# Fail loudly if no application key is set. Never fall back to a weak or shared key.
+if [ -z "${APP_KEY:-}" ]; then
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] ERROR: APP_KEY is not set. Set it as a secret (Quant Cloud generates one) or in docker-compose.override.yml for local development." >&2
+    exit 1
+fi
+
 # Ensure storage directories exist and have correct permissions
 mkdir -p /var/www/html/storage/framework/cache/data
 mkdir -p /var/www/html/storage/framework/sessions

@@ -68,7 +68,7 @@ A production-ready Laravel application template for Quant Cloud, featuring PHP 8
 Key environment variables you should configure:
 
 #### Laravel Configuration
-- `APP_KEY` - Application encryption key (required)
+- `APP_KEY` - Application encryption key (required). Quant Cloud generates a unique key for each site and injects it. The container refuses to start if the key is empty. For local development, set `APP_KEY` in `docker-compose.override.yml` (the example file holds a published dev-only key; never deploy with it).
 - `APP_ENV` - Application environment (default: production)
 - `APP_DEBUG` - Enable debug mode (default: false)
 - `APP_URL` - Application URL
