@@ -27,6 +27,8 @@ services:
       # Laravel Configuration
       - APP_ENV=local
       - APP_DEBUG=true
+      # DEV ONLY: published example key for local development. Never use it in a deployed environment.
+      # Generate your own: docker compose exec laravel php artisan key:generate --show
       - APP_KEY=base64:5jF8+AWwTh5IhY39pPpfmV3JOqScvNQQniqCYiHfHvY=
       - APP_URL=http://localhost
       - LOG_CHANNEL=stderr

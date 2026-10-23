@@ -4,10 +4,14 @@
 #   docker compose up
 #
 services:
-  app:
+  laravel:
     environment:
+      # DEV ONLY: published example key for local development. Never use it in a
+      # deployed environment. Generate your own with: php artisan key:generate --show
+      - APP_KEY=base64:5jF8+AWwTh5IhY39pPpfmV3JOqScvNQQniqCYiHfHvY=
+
       # Local-dev database connection (on Quant Cloud these are injected by the
-      # platform from the managed RDS instance; they must NEVER move into the base
+      # platform from the managed database instance; they must NEVER move into the base
       # docker-compose.yml — compose env overrides platform injection)
       - DB_HOST=db
       - DB_PORT=3306

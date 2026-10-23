@@ -1,6 +1,9 @@
+# Quant Cloud: run on ARM64 to match the arm64 images the org builds.
+x-quant-labels:
+  quant.architecture: ARM64
+
 services:
   laravel:
-    image: ghcr.io/quantcdn-templates/app-laravel:latest
     build: .
     restart: unless-stopped
     ports:
@@ -12,7 +15,10 @@ services:
       # Laravel Configuration
       - APP_ENV=${APP_ENV:-production}
       - APP_DEBUG=${APP_DEBUG:-false}
-      - APP_KEY=${APP_KEY:-base64:5jF8+AWwTh5IhY39pPpfmV3JOqScvNQQniqCYiHfHvY=}
+      # NOTE: APP_KEY must NOT be set here. Quant Cloud generates it as a secret
+      # (see quant/meta.json) and injects it. A value here would override it, and a
+      # fixed value would be shared by every site made from this template.
+      # For local development, set APP_KEY in docker-compose.override.yml.
       - APP_URL=${APP_URL:-http://localhost}
       - LOG_CHANNEL=${LOG_CHANNEL:-stderr}
       - LOG_LEVEL=${LOG_LEVEL:-error}
@@ -20,7 +26,7 @@ services:
       # Database Configuration
       - DB_CONNECTION=${DB_CONNECTION:-mysql}
       # NOTE: DB_HOST/DB_PORT/DB_DATABASE/DB_USERNAME/DB_PASSWORD must NOT be set here.
-      # Compose-declared env OVERRIDES Quant Cloud's injected RDS values and breaks
+      # Compose-declared env OVERRIDES Quant Cloud's injected managed database values and breaks
       # deployed apps. Local-dev values live in docker-compose.override.yml.example.
       
       # Cache Configuration  

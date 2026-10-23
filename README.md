@@ -17,7 +17,7 @@ A production-ready Laravel application template for Quant Cloud, featuring PHP 8
   - Client IP handling via `Quant-Client-IP` header
   - Host header override for `Quant-Orig-Host`
   - SMTP relay support for email delivery
-  - UID/GID 1000 mapping for EFS compatibility
+  - UID/GID 1000 mapping for shared filesystem compatibility
 - **Logging to stdout/stderr** for Docker best practices
 
 ## Quick Start
@@ -68,7 +68,7 @@ A production-ready Laravel application template for Quant Cloud, featuring PHP 8
 Key environment variables you should configure:
 
 #### Laravel Configuration
-- `APP_KEY` - Application encryption key (required)
+- `APP_KEY` - Application encryption key (required). The portal generates a unique key for the production environment of an app created through the dashboard template flow, and injects it. If you create other environments (e.g. staging, PR environments) or deploy outside the dashboard template flow, set the APP_KEY secret yourself — the container refuses to start without it. The container refuses to start if the key is empty. For local development, set `APP_KEY` in `docker-compose.override.yml` (the example file holds a published dev-only key; never deploy with it).
 - `APP_ENV` - Application environment (default: production)
 - `APP_DEBUG` - Enable debug mode (default: false)
 - `APP_URL` - Application URL
