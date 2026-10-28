@@ -4,6 +4,7 @@ x-quant-labels:
 
 services:
   laravel:
+    image: ghcr.io/quantcdn-templates/app-laravel:latest
     build: .
     restart: unless-stopped
     ports:
